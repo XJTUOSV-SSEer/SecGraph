@@ -1,0 +1,81 @@
+enclave {
+
+    from "sgx_tstdc.edl" import *;
+    
+    
+    trusted {
+
+        //public void ecall_init([in,size=len] unsigned char *keyF, size_t len);
+        public void ecall_init([in] unsigned char key[3][16]);
+        public void ecall_addDoc([in, size=id_length] char *doc_id, size_t id_length, [in, size=content_length] char *content, int content_length);
+        public void ecall_delDoc([in, size=id_length] char *doc_id, size_t id_length);
+        public void ecall_search([in, size=len] const char *keyword, size_t len);
+        public void ecall_test([in, size = length_content] char* encrypted_content, size_t length_content);
+        public void ecall_hash_test([in,size = len] const char* data,size_t len);
+        public void ecall_update_data([in,size=w_len]const char* w, size_t w_len, [in,size=id_len]const char* id, size_t id_len, size_t op);
+        public void ecall_update_data_Fuzzy([in,size=w_len]const char* w, size_t w_len, [in,size=id_len]const char* id, size_t id_len, size_t pos,size_t op);
+        public void ecall_Conjunctive_Exact_Social_Search([in,string] char* str);
+        public void ecall_Conjunctive_Fuzzy_Social_Search([in,string] char* str);
+        public void ecall_test_int(size_t test);
+        public void ecall_get_MostCFs([out,count = int_size]int* test, size_t int_size);
+        public void ecall_get_ecall_number([out,count = int_size]int* test, size_t int_size);
+        public void ecall_clear_CFs();
+
+    };
+
+    untrusted {
+        void ocall_start_time();
+        void ocall_end_time();
+        void ocall_start_time_test();
+        void ocall_end_time_test();
+        void ocall_test2([in, size = length_content] char* encrypted_content, size_t length_content);
+        void ocall_test([in, count = 1] int* mint,[in,size = 1] char* mchar,[in,size=len] char* mstring,int len);
+        void ocall_transfer_encrypted_entries([in, count= pair_count, size=rand_size] const void *t1_u_arr, 
+									            [in, count= pair_count, size=rand_size] const void *t1_v_arr, 
+									            [in, count= pair_count, size=rand_size] const void *t2_u_arr, 
+									            [in, count= pair_count, size=rand_size] const void *t2_v_arr,
+									            int pair_count, int rand_size); 
+        void ocall_retrieve_encrypted_doc([in, size=del_id_len] const char *del_id, size_t del_id_len, 
+                                          [out, size=maxLen] unsigned char *encrypted_content, size_t maxLen,
+                                          [out, count=int_len] int *length_content, size_t int_len);
+        
+        void ocall_del_encrypted_doc([in, size=del_id_len] const char *del_id, size_t del_id_len);
+        
+        void ocall_retrieve_M_c([in, size=_u_prime_size] unsigned char * _u_prime, size_t _u_prime_size,
+                                     [out, size=maxLen] unsigned char *_v_prime, size_t maxLen,
+                                     [out, count=int_len] int *_v_prime_size, size_t int_len);
+        
+        void ocall_del_M_c_value([in, size=_u_prime_size] const unsigned char *_u_prime, size_t _u_prime_size);
+
+        void ocall_query_tokens_entries([in, count= pair_count, size=rand_size] const void *Q_w_u_arr,
+                               [in, count= pair_count, size=rand_size] const void *Q_w_id_arr,
+                               int pair_count, int rand_size);
+        void ocall_add_update(
+            [in,size=stag_len]unsigned char* stag,size_t stag_len,
+            [in,size=C_id_len]unsigned char* C_id,size_t C_id_len, 
+            [in,size=ind_len]unsigned char* ind,size_t ind_len,
+            [in,size=C_stag_len]unsigned char* C_stag,size_t C_stag_len,
+            uint32_t fingerprint,
+            size_t index,
+            [in,size=CFId_len]unsigned char* CFId,size_t CFId_len,
+            [out,count = int_len]int* flag, size_t int_len
+        );
+        void ocall_del_update(
+            [in,size=stag_len]unsigned char* stag,size_t stag_len,
+            [in,size=stag_inverse_len]unsigned char* stag_inverse,size_t stag_inverse_len, 
+            [in,size=ind_len]unsigned char* ind,size_t ind_len,
+            [in,size=ind_inverse_len]unsigned char* ind_inverse,size_t ind_inverse_len,
+            uint32_t fingerprint,
+            size_t index,
+            [in,size=CFId_len]unsigned char* CFId,size_t CFId_len);
+
+        void ocall_Query_TSet([in,size=stag_len]unsigned char* stag,size_t stag_len,[out,size=value_len]unsigned char* value,size_t value_len);
+        void ocall_Query_iTSet([in,size=ind_len]unsigned char* ind,size_t ind_len,[out,size=value_len]unsigned char* value,size_t value_len);
+        void ocall_Get_CF([in,size = CFId_len]unsigned char* CFId, size_t CFId_len,[out,count=fingerprint_len,size = len]uint32_t* fingerprint, size_t fingerprint_len,size_t len); 
+        void ocall_send_stokenList([in,size = StokenList_len]unsigned char* StokenList,size_t StokenList_len,int StokenListSize,[out,size = ValList_len]unsigned char* ValList,size_t ValList_len,[out,count = int_len]int* ValListSize, size_t int_len);
+        void ocall_print_int(int input);
+        void ocall_print_string([in, string] const char *str);
+        void ocall_test_int(size_t test, [out,count=fingerprint_len,size = len]uint32_t* fingerprint, size_t fingerprint_len,size_t len);
+        void ocall_Get_Res([in]char* res,size_t res_len);
+    };
+};
