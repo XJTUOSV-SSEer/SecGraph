@@ -13,9 +13,9 @@
        `` $ make SGX_MODE=HW SGX_DEBUG=1``
 
 3. Execute the binary directly:
-   `
+   ```
     $ ./cryptoTestingApp
-   `
+   ```
 
 ## Worklog after Fork:
 
